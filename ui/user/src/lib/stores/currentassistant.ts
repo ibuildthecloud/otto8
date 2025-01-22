@@ -31,6 +31,10 @@ function assignSelected(currentAssistants: Assistant[], selectedName: string): A
 				assistant.current = true;
 				store.set(assistant);
 			}
+		}).catch((error) => {
+			if (String(error).includes('404')) {
+				window.location.href = '/';
+			}
 		});
 		return def;
 	}

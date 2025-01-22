@@ -50,18 +50,18 @@
 			class="icon-button text-white hover:text-blue-50"
 		>
 			{#if $darkMode}
-				<img src="/images/github-mark/github-mark-white.svg" alt="GitHub" class="h-8" />
+				<img src="/user/images/github-mark/github-mark-white.svg" alt="GitHub" class="h-8" />
 			{:else}
-				<img src="/images/github-mark/github-mark.svg" alt="GitHub" class="h-8" />
+				<img src="/user/images/github-mark/github-mark.svg" alt="GitHub" class="h-8" />
 			{/if}
 		</a>
 	</div>
 	<div class="mx-auto flex flex-col items-center gap-16">
 		<div class="flex items-end gap-4">
 			{#if $darkMode}
-				<img src="/images/obot-logo-blue-white-text.svg" alt="obot icon" class="h-64 px-5" />
+				<img src="/user/images/obot-logo-blue-white-text.svg" alt="obot icon" class="h-64 px-5" />
 			{:else}
-				<img src="/images/obot-logo-blue-black-text.svg" alt="obot icon" class="h-64 px-5" />
+				<img src="/user/images/obot-logo-blue-black-text.svg" alt="obot icon" class="h-64 px-5" />
 			{/if}
 		</div>
 
