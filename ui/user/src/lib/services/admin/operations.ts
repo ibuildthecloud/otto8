@@ -101,7 +101,8 @@ import type {
 	License,
 	LicenseManifest,
 	LLMAuditLog,
-	LLMAuditLogURLFilters
+	LLMAuditLogURLFilters,
+	LocalAuthUser
 } from './types';
 import { MCPCompositeDeletionDependencyError } from './types';
 
@@ -325,6 +326,33 @@ export async function deconfigureAuthProvider(
 	opts?: { fetch?: Fetcher }
 ): Promise<void> {
 	await doPost(`/auth-providers/${authProviderID}/deconfigure`, {}, opts);
+}
+
+// Local auth provider users
+
+export async function listLocalAuthUsers(opts?: { fetch?: Fetcher }): Promise<LocalAuthUser[]> {
+	const list = (await doGet('/local-auth/users', opts)) as ItemsResponse<LocalAuthUser>;
+	return list.items ?? [];
+}
+
+export async function createLocalAuthUser(
+	email: string,
+	password: string,
+	opts?: { fetch?: Fetcher }
+): Promise<LocalAuthUser> {
+	return (await doPost('/local-auth/users', { email, password }, opts)) as LocalAuthUser;
+}
+
+export async function setLocalAuthUserPassword(
+	id: string,
+	password: string,
+	opts?: { fetch?: Fetcher }
+): Promise<void> {
+	await doPost(`/local-auth/users/${id}/password`, { password }, opts);
+}
+
+export async function deleteLocalAuthUser(id: string): Promise<void> {
+	await doDelete(`/local-auth/users/${id}`);
 }
 
 // Bootstrap

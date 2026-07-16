@@ -39,6 +39,7 @@ import (
 	"github.com/obot-platform/obot/pkg/imagepullsecrets"
 	"github.com/obot-platform/obot/pkg/jwt/persistent"
 	"github.com/obot-platform/obot/pkg/license"
+	"github.com/obot-platform/obot/pkg/localauth"
 	"github.com/obot-platform/obot/pkg/logutil"
 	"github.com/obot-platform/obot/pkg/mcp"
 	"github.com/obot-platform/obot/pkg/messagepolicy"
@@ -174,6 +175,7 @@ type Services struct {
 	UserUIPort                  int
 	GatewayServer               *gserver.Server
 	Bootstrapper                *bootstrap.Bootstrap
+	LocalAuthProvider           *localauth.Provider
 	AuthEnabled                 bool
 	DefaultMCPCatalogPath       string
 	DefaultSystemMCPCatalogPath string
@@ -831,8 +833,22 @@ func New(ctx context.Context, config Config) (*Services, error) {
 	}
 
 	authenticators := gserver.NewGatewayTokenReviewer(gatewayClient, providerDispatcher)
+	var localAuthProvider *localauth.Provider
 	if config.EnableAuthentication {
 		proxyManager = proxy.NewProxyManager(providerDispatcher)
+
+		// The local auth provider runs in-process, rather than as a daemon launched from the
+		// provider registry, so that it can use Obot's own database for users and sessions.
+		localAuthProvider, err = localauth.New(gatewayClient, config.Hostname)
+		if err != nil {
+			return nil, err
+		}
+
+		localAuthProviderURL, err := localAuthProvider.Start(ctx)
+		if err != nil {
+			return nil, err
+		}
+		providerDispatcher.RegisterBuiltinAuthProvider(system.DefaultNamespace, localauth.ProviderName, localAuthProviderURL)
 
 		// Token Auth + OAuth auth
 		authenticators = union.NewFailOnError(authenticators, proxyManager)
@@ -968,6 +984,7 @@ func New(ctx context.Context, config Config) (*Services, error) {
 		GatewayServer:                gatewayServer,
 		AuthEnabled:                  config.EnableAuthentication,
 		Bootstrapper:                 bootstrapper,
+		LocalAuthProvider:            localAuthProvider,
 
 		DefaultMCPCatalogPath:          config.DefaultMCPCatalogPath,
 		DefaultSystemMCPCatalogPath:    config.DefaultSystemMCPCatalogPath,
