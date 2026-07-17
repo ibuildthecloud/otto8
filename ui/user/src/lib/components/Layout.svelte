@@ -5,6 +5,7 @@
 		'agent-management': true,
 		'mcp-server-management': true,
 		'skills-management': true,
+		'hosted-agent-management': true,
 		'device-management': true,
 		'user-management': true,
 		'llm-gateway': true,
@@ -88,6 +89,7 @@
 		Settings,
 		PanelLeftClose,
 		Brain,
+		Container,
 		LayoutGrid
 	} from '@lucide/svelte';
 	import { type Component, type Snippet, tick, untrack } from 'svelte';
@@ -255,6 +257,12 @@
 			label: 'Skills',
 			href: '/skills'
 		},
+		{
+			id: 'hosted-agents',
+			icon: Container,
+			label: 'Agents',
+			href: '/hosted-agents'
+		},
 		...(hasAccessibleModels
 			? [
 					{
@@ -409,6 +417,26 @@
 								id: 'skill-access-policies',
 								href: '/admin/skill-access-policies',
 								label: 'Skill Access Policies',
+								collapsible: false
+							}
+						]
+					},
+					{
+						id: 'hosted-agent-management',
+						icon: Container,
+						label: 'Agent Management',
+						collapsible: true,
+						items: [
+							{
+								id: 'hosted-agents',
+								href: '/admin/hosted-agents',
+								label: 'Agents',
+								collapsible: false
+							},
+							{
+								id: 'hosted-agent-access-policies',
+								href: '/admin/hosted-agent-access-policies',
+								label: 'Agent Access Policies',
 								collapsible: false
 							}
 						]
