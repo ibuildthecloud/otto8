@@ -57,6 +57,8 @@ func AddToSchemeWithGV(scheme *runtime.Scheme, schemeGroupVersion schema.GroupVe
 		&SkillAccessRuleList{},
 		&AgentSource{},
 		&AgentSourceList{},
+		&Harness{},
+		&HarnessList{},
 		&HostedAgent{},
 		&HostedAgentList{},
 		&HostedAgentInstance{},
